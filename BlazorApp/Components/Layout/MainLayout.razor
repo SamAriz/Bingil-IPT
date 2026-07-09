@@ -1,17 +1,61 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<div class="top-nav">
+    <div style="font-weight: bold;
+     font-size: 1.4rem; 
+     background: white; 
+     border-radius: 50%;"
+     >Blazor</div>
+    
+    <div style="display:flex; align-items:center; gap:16px;">
+        <span>Profile Page</span>
+    </div>
+</div>
+
+<div style="display: flex; height: calc(100vh - 64px); overflow: hidden; background: #1f2337;">
+    
+    <!-- Main Content Area (No left sidebar) -->
+    <div style="flex: 1; overflow-y: auto; padding: 24px;">
+        @Body
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+    <!-- Right Sidebar -->
+    <div style="width: 300px; background: #16213e; border-left: 1px solid #2a2f4f; padding: 20px; overflow-y: auto;">
+        <h4 style="margin-bottom: 16px; color: #a5b4fc;">Samples</h4>
+        <!-- Stories will go here -->
+
+<div class="hobby-item">
+    <h3 style="margin-bottom: 16px; color: #a5b4fc;">Pictures</h3>
+    
+    <img src="/pic/pic-1.jpg" alt="Picture 1" style="max-width: 700px; width: 30%; border-radius: 8px;" />
+    <img src="/pic/pic-2.jpg" alt="Picture 2" style="max-width: 700px; width: 30%; border-radius: 8px;" />
+    <img src="/pic/pic-3.jpg" alt="Picture 3" style="max-width: 700px; width: 30%; border-radius: 8px;" />
+
+<div class="hobby-item">
+            <h3 style="margin-bottom: 16px; color: #a5b4fc;">Video</h3>
+            <video controls width="100%" style="max-width: 700px; border-radius: 8px;">
+                <source src="/vid/tiktok-vid.mp4" type="video/mp4">
+                Video player section.
+            </video>
+
+<div class="hobby-item">
+            <h3 style="margin-bottom: 16px; color: #a5b4fc;">Audio</h3>
+            <audio controls style="width: 100%; margin: 1rem 0;">
+                <source src="/msc/tiktok-msc.mp3" type="audio/mpeg">
+                Audio player section.
+            </audio>
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+
+        </div>
 </div>
+
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // You can remove NavMenu completely now
+    }
+}

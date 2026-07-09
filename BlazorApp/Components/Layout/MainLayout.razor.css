@@ -96,3 +96,11 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+    
+.logo-text {
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    font-size: 1.4rem;
+    background: white;
+    border-radius: 50%;
+}
