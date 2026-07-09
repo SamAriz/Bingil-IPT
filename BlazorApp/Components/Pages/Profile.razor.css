@@ -74,3 +74,31 @@ h2 {
     margin-bottom: 20px;
     color: #1e2937;
 }
+.projects {
+    margin-top: 60px;
+}
+
+.project-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.project-buttons {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px;
+}
+
+.game-embed {
+    margin-top: 24px;
+}
+
+.game-embed iframe {
+    max-width: 100%;
+    border-radius: 12px;
+}
