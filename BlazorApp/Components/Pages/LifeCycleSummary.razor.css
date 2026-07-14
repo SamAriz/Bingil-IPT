@@ -1,65 +1,85 @@
 .summary-page {
-    max-width: 800px;
+    max-width: 840px;
     margin: 40px auto;
     padding: 30px;
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-radius: 22px;
+    box-shadow: 0 22px 60px rgba(15, 23, 42, 0.08);
+    font-family: inherit;
 }
 
 .summary-page h1 {
     text-align: center;
-    color: #1d0bb9;
-    margin-bottom: 30px;
+    color: #1d4ed8;
+    margin-bottom: 24px;
+    font-size: 2rem;
 }
 
 .summary-item {
     display: flex;
     justify-content: space-between;
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
-    font-size: 1.2rem;
+    padding: 16px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 1.1rem;
+    color: #0f172a;
 }
 
 .total-section {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 2px solid #1d0bb9;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 2px solid #1d4ed8;
 }
 
 .total-row {
     display: flex;
     justify-content: space-between;
-    font-size: 1.3rem;
-    margin: 12px 0;
+    font-size: 1.2rem;
+    margin: 14px 0;
 }
 
 .grand-total {
-    font-size: 1.8rem;
-    color: #1d0bb9;
+    font-size: 1.7rem;
+    color: #1d4ed8;
 }
 
 .actions {
-    margin-top: 40px;
+    margin-top: 36px;
     display: flex;
-    gap: 20px;
+    gap: 18px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .btn {
-    padding: 15px 40px;
-    font-size: 1.2rem;
+    padding: 14px 32px;
+    font-size: 1rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 14px;
     cursor: pointer;
 }
 
 .btn-primary {
-    background: #1d0bb9;
+    background: #1d4ed8;
     color: white;
 }
 
 .btn-secondary {
-    background: #ddd;
-    color: #333;
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.btn:hover,
+.btn:focus-visible {
+    transform: translateY(-1px);
+}
+
+button,
+.btn {
+    cursor: pointer;
+}
+
+button:focus-visible,
+.btn:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.75);
+    outline-offset: 2px;
 }

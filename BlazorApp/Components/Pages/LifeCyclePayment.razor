@@ -10,8 +10,8 @@
         <p>Choose a payment method and enter the details.</p>
 
         <div class="payment-options">
-            <button class="btn btn-primary" @onclick="SelectCash">Cash</button>
-            <button class="btn btn-outline-primary" @onclick="SelectCard">Card</button>
+            <button type="button" class="btn btn-primary" @onclick="SelectCash">Cash</button>
+            <button type="button" class="btn btn-outline-primary" @onclick="SelectCard">Card</button>
         </div>
 
         @if (SelectedMethod == "Cash")
@@ -19,7 +19,7 @@
             <div class="payment-form">
                 <label class="form-label">Cash Amount</label>
                 <input class="form-control" type="number" @bind="CashAmount" />
-                <button class="btn btn-success mt-3" @onclick="PayCash">Confirm Cash Payment</button>
+                <button type="button" class="btn btn-success mt-3" @onclick="PayCash">Confirm Cash Payment</button>
             </div>
         }
 
@@ -30,7 +30,7 @@
                 <input class="form-control" maxlength="16" @bind="CardNumber" />
                 <label class="form-label mt-2">PIN</label>
                 <input class="form-control" type="password" maxlength="4" @bind="CardPin" />
-                <button class="btn btn-success mt-3" @onclick="PayCard">Confirm Card Payment</button>
+                <button type="button" class="btn btn-success mt-3" @onclick="PayCard">Confirm Card Payment</button>
             </div>
         }
 
@@ -62,8 +62,8 @@
             </div>
 
             <div class="payment-actions">
-                <button class="btn btn-outline-primary" @onclick="GoToProducts">Go Back to Product</button>
-                <button class="btn btn-primary" @onclick="GoHome">Return Home</button>
+                <button type="button" class="btn btn-outline-primary" @onclick="GoToProducts">Go Back to Product</button>
+                <button type="button" class="btn btn-primary" @onclick="GoHome">Return Home</button>
             </div>
         }
     </div>

@@ -6,7 +6,7 @@
 
 <div class="kiosk-menu">
     <div class="top-bar">
-        <button class="back-btn" @onclick="GoBack">← Back</button>
+        <button type="button" class="back-btn" @onclick="GoBack">← Back</button>
         <h2>Choose</h2>
         <div class="cart-info">
             Items: @TotalItems | ₱@TotalAmount.ToString("N2")
@@ -22,12 +22,12 @@
                 <p class="price">₱@item.Price</p>
 
                 <div class="quantity-control">
-                    <button class="qty-btn" @onclick="() => ChangeQuantity(item, -1)">−</button>
+                    <button type="button" class="qty-btn" @onclick="() => ChangeQuantity(item, -1)">−</button>
                     <span class="qty">@item.Quantity</span>
-                    <button class="qty-btn" @onclick="() => ChangeQuantity(item, 1)">+</button>
+                    <button type="button" class="qty-btn" @onclick="() => ChangeQuantity(item, 1)">+</button>
                 </div>
 
-                <button class="add-to-cart-btn" @onclick="() => AddToCart(item)" disabled="@(item.Quantity == 0)">
+                <button type="button" class="add-to-cart-btn" @onclick="() => AddToCart(item)" disabled="@(item.Quantity == 0)">
                     Add ₱@(item.Subtotal)
                 </button>
             </div>
