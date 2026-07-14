@@ -13,11 +13,12 @@
     <h2>What do you want?</h2>
 
     <div class="order-options">
-        <button type="button" class="option-card" @onclick="StartOrder">
+        <!-- Anchor fallback so navigation works even if Blazor JS/SignalR isn't connected -->
+        <a class="option-card" href="/lifecycle/menu" @onclick="StartOrder" role="button">
             <span class="icon">✨</span>
             <span class="option-title">START</span>
             <span class="option-description">Click here to open the sample app</span>
-        </button>
+        </a>
     </div>
 
     <div class="mt-4">
