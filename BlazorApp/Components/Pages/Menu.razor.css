@@ -164,3 +164,10 @@ button:focus-visible,
     outline: 3px solid rgba(37, 99, 235, 0.75);
     outline-offset: 2px;
 }
+.menu-item img {
+    width: 100%;
+    height: 220px;           /* Change this height */
+    object-fit: cover;       /* Keeps image proportion */
+    border-radius: 12px;
+    margin-bottom: 10px;
+}

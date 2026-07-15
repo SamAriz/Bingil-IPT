@@ -1,13 +1,14 @@
 @page "/lifecycle/summary"
-@rendermode InteractiveServer
-@inject NavigationManager NavigationManager
 @using Microsoft.AspNetCore.Components
-@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.JSInterop
 
-<PageTitle>Order Summary</PageTitle>
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Payment - Jollibee Kiosk</PageTitle>
 
 <div class="summary-page">
-    <h1>Your Order Summary</h1>
+    <h1>Order Summary & Payment</h1>
 
     <div class="order-list">
         @foreach (var item in Cart)
@@ -25,52 +26,37 @@
             <strong>@TotalQuantity</strong>
         </div>
         <div class="total-row grand-total">
-            <strong>Total Amount</strong>
+            <strong>Total to Pay</strong>
             <strong>₱@TotalPrice.ToString("N2")</strong>
         </div>
     </div>
 
-    @if (!string.IsNullOrWhiteSpace(ConfirmationMessage))
-    {
-        <div class="alert alert-success mt-3">@ConfirmationMessage</div>
-    }
-
-    <div class="actions">
-        <button type="button" class="btn btn-secondary" @onclick="GoBack">← Back to Menu</button>
-        <button type="button" class="btn btn-primary" @onclick="ConfirmOrder">Confirm Order</button>
+    <div class="payment-options">
+        <button class="btn btn-primary" @onclick="ProcessCashPayment">💵 Pay with Cash</button>
+        <button class="btn btn-secondary" @onclick="ProcessCardPayment">💳 Pay with Card</button>
     </div>
 </div>
 
 @code {
-    [SupplyParameterFromQuery]
-    public string? Name { get; set; }
-
-    [SupplyParameterFromQuery]
-    public decimal? Price { get; set; }
-
-    [SupplyParameterFromQuery]
-    public int? Quantity { get; set; }
-
-    private List<CartItem> Cart => new()
-    {
-        new CartItem
-        {
-            Name = Name ?? "Unknown",
-            Price = Price ?? 0,
-            Quantity = Quantity ?? 0
-        }
-    };
+    private List<CartItem> Cart = new List<CartItem>();
 
     private int TotalQuantity => Cart.Sum(x => x.Quantity);
     private decimal TotalPrice => Cart.Sum(x => x.Price * x.Quantity);
-    private string ConfirmationMessage { get; set; } = string.Empty;
 
-    private void GoBack() => NavigationManager.NavigateTo("/lifecycle/menu");
-
-    private void ConfirmOrder()
+    private async Task ProcessCashPayment()
     {
-        ConfirmationMessage = $"Order confirmed! Total: ₱{TotalPrice:N2}";
-        NavigationManager.NavigateTo("/lifecycle/payment");
+        if (TotalPrice > 0)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"✅ Payment successful!\nThank you for your order of ₱{TotalPrice:N2} (Cash)");
+        }
+    }
+
+    private async Task ProcessCardPayment()
+    {
+        if (TotalPrice > 0)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", $"✅ Payment successful!\nThank you for your order of ₱{TotalPrice:N2} (Card)");
+        }
     }
 
     public class CartItem
