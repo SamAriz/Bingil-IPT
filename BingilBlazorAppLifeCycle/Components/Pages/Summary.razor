@@ -1,0 +1,82 @@
+﻿@page "/summary"
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Routing
+
+<PageTitle>Order Summary</PageTitle>
+
+<div class="summary-page">
+    <h1>Your Order Summary</h1>
+
+    <div class="order-list">
+        @foreach (var item in Cart)
+        {
+            <div class="summary-item">
+                <span>@item.Quantity x @item.Name</span>
+                <span>₱@(item.Price * item.Quantity)</span>
+            </div>
+        }
+    </div>
+
+    <div class="total-section">
+        <div class="total-row">
+            <strong>Total Items</strong>
+            <strong>@TotalQuantity</strong>
+        </div>
+        <div class="total-row grand-total">
+            <strong>Total Amount</strong>
+            <strong>₱@TotalPrice.ToString("N2")</strong>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(ConfirmationMessage))
+    {
+        <div class="alert alert-success mt-3">@ConfirmationMessage</div>
+    }
+
+    <div class="actions">
+        <button class="btn btn-secondary" @onclick="GoBack">← Back to Menu</button>
+        <button class="btn btn-primary" @onclick="ConfirmOrder">Confirm Order</button>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string? Name { get; set; }
+
+    [SupplyParameterFromQuery]
+    public decimal? Price { get; set; }
+
+    [SupplyParameterFromQuery]
+    public int? Quantity { get; set; }
+
+    private List<CartItem> Cart => new()
+    {
+        new CartItem
+        {
+            Name = Name ?? "Unknown",
+            Price = Price ?? 0,
+            Quantity = Quantity ?? 0
+        }
+    };
+
+    private int TotalQuantity => Cart.Sum(x => x.Quantity);
+    private decimal TotalPrice => Cart.Sum(x => x.Price * x.Quantity);
+    private string ConfirmationMessage { get; set; } = string.Empty;
+
+    private void GoBack() => NavigationManager.NavigateTo("/menu");
+
+    private void ConfirmOrder()
+    {
+        ConfirmationMessage = $"Order confirmed! Total: ₱{TotalPrice:N2}";
+        NavigationManager.NavigateTo("/payment");
+    }
+
+    public class CartItem
+    {
+        public string Name { get; set; } = "";
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+    }
+}
