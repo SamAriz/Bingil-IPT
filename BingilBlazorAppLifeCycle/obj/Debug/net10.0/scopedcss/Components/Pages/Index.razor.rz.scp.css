@@ -1,0 +1,52 @@
+.welcome-screen[b-46js91uvlo] {
+    height: 100vh;
+    background: linear-gradient(135deg, #1d0bb9, #4106e3);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.logo h1[b-46js91uvlo] {
+    font-size: 5rem;
+    margin: 0;
+    letter-spacing: 4px;
+}
+
+.logo p[b-46js91uvlo] {
+    font-size: 1.5rem;
+    margin-bottom: 60px;
+}
+
+.order-options[b-46js91uvlo] {
+    display: flex;
+    gap: 60px;
+}
+
+.option-card[b-46js91uvlo] {
+    background: white;
+    color: #333;
+    width: 380px;
+    padding: 50px 30px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.option-card:hover[b-46js91uvlo] {
+    transform: scale(1.1);
+}
+
+.icon[b-46js91uvlo] {
+    font-size: 5rem;
+    margin-bottom: 20px;
+}
+
+.option-card h3[b-46js91uvlo] {
+    font-size: 2.5rem;
+    margin: 10px 0;
+}
