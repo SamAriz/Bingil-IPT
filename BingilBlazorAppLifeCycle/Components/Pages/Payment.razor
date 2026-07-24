@@ -1,14 +1,13 @@
 @page "/payment"
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@using Microsoft.AspNetCore.Components
 
 <PageTitle>Payment</PageTitle>
 
 <div class="payment-page">
     <div class="payment-card">
         <h1>Payment</h1>
-        <p>Choose a payment method and enter the details.</p>
+        <p><strong>Total Due: ₱@CurrentOrder.TotalAmount.ToString("N2")</strong></p>
 
         <div class="payment-options">
             <button class="btn btn-primary" @onclick="SelectCash">Cash</button>
@@ -18,116 +17,120 @@
         @if (SelectedMethod == "Cash")
         {
             <div class="payment-form">
-                <label class="form-label">Cash Amount</label>
-                <input class="form-control" type="number" @bind="CashAmount" />
-                <button class="btn btn-success mt-3" @onclick="PayCash">Confirm Cash Payment</button>
+                <label class="form-label">Enter Cash Amount</label>
+                <input type="number" class="form-control" @bind="CashAmount" />
+                <button class="btn btn-success mt-3" @onclick="ProcessCashPayment">Pay with Cash</button>
             </div>
         }
 
         @if (SelectedMethod == "Card")
         {
             <div class="payment-form">
-                <label class="form-label">ATM Card Number</label>
+                <label class="form-label">Card Number</label>
                 <input class="form-control" maxlength="16" @bind="CardNumber" />
                 <label class="form-label mt-2">PIN</label>
                 <input class="form-control" type="password" maxlength="4" @bind="CardPin" />
-                <button class="btn btn-success mt-3" @onclick="PayCard">Confirm Card Payment</button>
+                <button class="btn btn-success mt-3" @onclick="ProcessCardPayment">Pay with Card</button>
             </div>
         }
 
-        @if (!string.IsNullOrWhiteSpace(PaymentMessage))
+        @if (!string.IsNullOrEmpty(PaymentMessage))
         {
-            <div class="alert alert-success mt-3">@PaymentMessage</div>
+            <div class="alert alert-info mt-3">@PaymentMessage</div>
         }
 
         @if (ShowReceipt)
         {
             <div class="receipt-card">
-                <h3>Receipt</h3>
-                <div class="receipt-row">
-                    <span>Item</span>
-                    <strong>Bato ni Darna</strong>
+                <h3>✅ Receipt</h3>
+                <hr />
+
+                @foreach (var item in CurrentOrder.Items)
+                {
+                    <div class="receipt-row">
+                        <span>@item.Quantity x @item.Name</span>
+                        <span>₱@((item.Price * item.Quantity).ToString("N2"))</span>
+                    </div>
+                }
+
+                <hr />
+                <div class="receipt-row total">
+                    <strong>Total Amount</strong>
+                    <strong>₱@CurrentOrder.TotalAmount.ToString("N2")</strong>
                 </div>
-                <div class="receipt-row">
-                    <span>Price</span>
-                    <strong>₱99.00</strong>
-                </div>
+
                 <div class="receipt-row">
                     <span>Payment Method</span>
                     <strong>@SelectedMethod</strong>
                 </div>
-                <div class="receipt-row">
-                    <span>Status</span>
-                    <strong>Paid</strong>
-                </div>
+
+                @if (SelectedMethod == "Cash" && CashAmount > CurrentOrder.TotalAmount)
+                {
+                    <div class="receipt-row">
+                        <span>Change</span>
+                        <strong>₱@((CashAmount - CurrentOrder.TotalAmount).ToString("N2"))</strong>
+                    </div>
+                }
             </div>
 
             <div class="payment-actions">
-                <button class="btn btn-outline-primary" @onclick="GoToProducts">Go Back to Product</button>
-                <button class="btn btn-primary" @onclick="GoHome">Return Home</button>
+                <button class="btn btn-outline-primary" @onclick="GoBackToMenu">← Back to Products</button>
+                <button class="btn btn-primary" @onclick="GoToStart">Return to Start</button>
             </div>
         }
     </div>
 </div>
 
 @code {
-    private string PaymentMessage { get; set; } = string.Empty;
-    private string SelectedMethod { get; set; } = string.Empty;
     private decimal CashAmount { get; set; }
-    private string CardNumber { get; set; } = string.Empty;
-    private string CardPin { get; set; } = string.Empty;
-    private bool ShowReceipt { get; set; }
-    private decimal ProductPrice { get; set; } = 99;
+    private string SelectedMethod { get; set; } = "";
+    private string CardNumber { get; set; } = "";
+    private string CardPin { get; set; } = "";
+    private string PaymentMessage { get; set; } = "";
+    private bool ShowReceipt { get; set; } = false;
 
     private void SelectCash()
     {
         SelectedMethod = "Cash";
-        PaymentMessage = string.Empty;
+        PaymentMessage = "";
         ShowReceipt = false;
-        StateHasChanged();
     }
 
     private void SelectCard()
     {
         SelectedMethod = "Card";
-        PaymentMessage = string.Empty;
+        PaymentMessage = "";
         ShowReceipt = false;
-        StateHasChanged();
     }
 
-    private void PayCash()
+    private void ProcessCashPayment()
     {
-        if (CashAmount >= ProductPrice)
+        if (CashAmount >= CurrentOrder.TotalAmount)
         {
-            PaymentMessage = $"Cash payment accepted. Change: ₱{CashAmount - ProductPrice:N2}";
             ShowReceipt = true;
+            PaymentMessage = "Payment successful! Thank you!";
         }
         else
         {
-            PaymentMessage = "Cash payment is not enough.";
-            ShowReceipt = false;
+            PaymentMessage = "Insufficient cash amount!";
         }
-
         StateHasChanged();
     }
 
-    private void PayCard()
+    private void ProcessCardPayment()
     {
         if (!string.IsNullOrWhiteSpace(CardNumber) && !string.IsNullOrWhiteSpace(CardPin))
         {
-            PaymentMessage = "Card payment accepted.";
             ShowReceipt = true;
+            PaymentMessage = "Card payment successful!";
         }
         else
         {
-            PaymentMessage = "Please enter the card number and PIN.";
-            ShowReceipt = false;
+            PaymentMessage = "Please enter card details.";
         }
-
         StateHasChanged();
     }
 
-    private void GoToProducts() => NavigationManager.NavigateTo("/menu");
-
-    private void GoHome() => NavigationManager.NavigateTo("/");
+    private void GoBackToMenu() => NavigationManager.NavigateTo("/menu");
+    private void GoToStart() => NavigationManager.NavigateTo("/");
 }

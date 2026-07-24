@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
-<PageTitle>Ano imo?</PageTitle>
+<PageTitle>Menu</PageTitle>
 
 <div class="kiosk-menu">
     <div class="top-bar">
@@ -19,19 +19,21 @@
             <div class="menu-item">
                 <img src="@item.Image" width="120" height="120" />
                 <h3>@item.Name</h3>
-                <p class="price">₱@item.Price</p>
+                <p class="price">₱@item.Price.ToString("N2")</p>
 
                 <div class="quantity-control">
-                    <button class="qty-btn" @onclick="() => ChangeQuantity(item, -1)">−</button>
+                    <button class="qty-btn" @onclick="() => ChangeQuantity(item, -1)" disabled="@(item.Quantity == 0)">−</button>
                     <span class="qty">@item.Quantity</span>
                     <button class="qty-btn" @onclick="() => ChangeQuantity(item, 1)">+</button>
                 </div>
-
-                <button class="add-to-cart-btn" @onclick="() => AddToCart(item)" disabled="@(item.Quantity == 0)">
-                    Add ₱@(item.Subtotal)
-                </button>
             </div>
         }
+    </div>
+
+    <div class="checkout-bar">
+        <button class="btn btn-primary" @onclick="GoToSummary" disabled="@(TotalItems == 0)">
+            Checkout ₱@TotalAmount.ToString("N2")
+        </button>
     </div>
 </div>
 
@@ -39,13 +41,13 @@
     private List<MenuItem> MenuItems = new();
 
     private int TotalItems => MenuItems.Sum(x => x.Quantity);
-    private decimal TotalAmount => MenuItems.Sum(x => x.Subtotal);
+    private decimal TotalAmount => MenuItems.Sum(x => x.Price * x.Quantity);
 
     protected override void OnInitialized()
     {
         MenuItems = new List<MenuItem>
         {
-            new MenuItem { Name = "Kayo ba?", Price = 99, Image = "/img/product.jpg" },
+            new MenuItem { Name = "Hotpao", Price = 99, Image = "/img/product-1.jpg" },
             // Add more items here
         };
     }
@@ -56,13 +58,21 @@
         StateHasChanged();
     }
 
-    private void AddToCart(MenuItem item)
+    private void GoToSummary()
     {
-        if (item.Quantity > 0)
+        CurrentOrder.Items.Clear();
+
+        foreach (var item in MenuItems.Where(i => i.Quantity > 0))
         {
-            // For now, just go to summary (you can improve this later with real cart)
-            NavigationManager.NavigateTo($"/summary");
+            CurrentOrder.Items.Add(new CurrentOrder.OrderItem 
+            { 
+                Name = item.Name, 
+                Price = item.Price, 
+                Quantity = item.Quantity 
+            });
         }
+
+        NavigationManager.NavigateTo("/summary");
     }
 
     private void GoBack() => NavigationManager.NavigateTo("/");
@@ -73,6 +83,5 @@
         public decimal Price { get; set; }
         public string Image { get; set; } = "";
         public int Quantity { get; set; } = 0;
-        public decimal Subtotal => Price * Quantity;
     }
 }
