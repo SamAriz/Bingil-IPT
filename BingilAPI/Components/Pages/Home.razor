@@ -1,0 +1,168 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject BingilAPI.Services.ApiService ApiService
+@using BingilAPI.Models
+
+<PageTitle>API Dashboard</PageTitle>
+
+<div class="kiosk-menu">
+    <div class="top-bar">
+        <h2>My API's</h2>
+    </div>
+
+    <div class="menu-grid">
+
+        @* ---------- 1. POKEDEX ---------- *@
+        <div class="menu-item">
+            <div class="icon-box">🎮</div>
+            <h3>Pokedex</h3>
+            <p class="tagline">Look up any Pokemon</p>
+
+            <button class="add-to-cart-btn" @onclick="ShowPokemon">
+                @(SelectedApi == "pokemon" ? "Close" : "Open")
+            </button>
+
+            @if (SelectedApi == "pokemon")
+            {
+                <div class="card-content pop-in">
+                    <input type="text" class="form-control" @bind="PokemonQuery" placeholder="e.g. pikachu" />
+                    <button class="inner-btn" @onclick="SearchPokemon">Search</button>
+
+                    @if (PokemonNotFound)
+                    {
+                        <p>Pokemon not found — check the spelling.</p>
+                    }
+                    else if (Pokemon != null)
+                    {
+                        <div class="result-block">
+                            <img src="@Pokemon.sprites.front_default" alt="@Pokemon.name" class="pokemon-img" />
+                            <p><strong>@Pokemon.name</strong></p>
+                            <p>Type: @string.Join(", ", Pokemon.types.Select(t => t.type.name))</p>
+                            <p>Height: @Pokemon.height &nbsp; Weight: @Pokemon.weight</p>
+                            <ul>
+                                @foreach (var stat in Pokemon.stats)
+                                {
+                                    <li>@stat.stat.name: @stat.base_stat</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        @* ---------- 2. IP LOOKUP ---------- *@
+        <div class="menu-item">
+            <div class="icon-box">🌐</div>
+            <h3>IP Lookup</h3>
+            <p class="tagline">Locate any IP address</p>
+
+            <button class="add-to-cart-btn" @onclick="ShowIpLookup">
+                @(SelectedApi == "iplookup" ? "Close" : "Open")
+            </button>
+
+            @if (SelectedApi == "iplookup")
+            {
+                <div class="card-content pop-in">
+                    <input type="text" class="form-control" @bind="IpQuery" placeholder="e.g. 91.231.110.0" />
+                    <button class="inner-btn" @onclick="SearchIp">Search</button>
+
+                    @if (IpResult != null)
+                    {
+                        @if (IpResult.status == "fail")
+                        {
+                            <p>Lookup failed: @IpResult.message</p>
+                        }
+                        else
+                        {
+                            <div class="result-block">
+                                <p><strong>@IpResult.query</strong></p>
+                                <p>@IpResult.city, @IpResult.regionName, @IpResult.country @IpResult.zip</p>
+                                <p>Coords: @IpResult.lat, @IpResult.lon</p>
+                                <p>Timezone: @IpResult.timezone</p>
+                                <p>ISP: @IpResult.isp</p>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+        </div>
+
+        @* ---------- 3. DECK OF CARDS ---------- *@
+        <div class="menu-item">
+            <div class="icon-box">🃏</div>
+            <h3>Draw a Card</h3>
+            <p class="tagline">Draw a random playing card</p>
+
+            <button class="add-to-cart-btn" @onclick="ShowCard">
+                @(SelectedApi == "card" ? "Close" : "Open")
+            </button>
+
+            @if (SelectedApi == "card")
+            {
+                <div class="card-content pop-in">
+                    <button class="inner-btn" @onclick="DrawCard">Draw</button>
+
+                    @if (Card != null)
+                    {
+                        <div class="result-block">
+                            <img src="@Card.image" alt="@Card.value of @Card.suit" class="card-img" />
+                            <p>@Card.value of @Card.suit</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private string SelectedApi = "";
+
+    private PokemonResult? Pokemon;
+    private string PokemonQuery = "";
+    private bool PokemonNotFound = false;
+
+    private IpLookupResult? IpResult;
+    private string IpQuery = "";
+
+    private PlayingCard? Card;
+
+    private void ShowPokemon()
+    {
+        SelectedApi = SelectedApi == "pokemon" ? "" : "pokemon";
+    }
+
+    private async Task SearchPokemon()
+    {
+        if (!string.IsNullOrWhiteSpace(PokemonQuery))
+        {
+            Pokemon = await ApiService.GetPokemonAsync(PokemonQuery);
+            PokemonNotFound = Pokemon == null;
+        }
+    }
+
+    private void ShowIpLookup()
+    {
+        SelectedApi = SelectedApi == "iplookup" ? "" : "iplookup";
+    }
+
+    private async Task SearchIp()
+    {
+        if (!string.IsNullOrWhiteSpace(IpQuery))
+        {
+            IpResult = await ApiService.GetIpLookupAsync(IpQuery);
+        }
+    }
+
+    private void ShowCard()
+    {
+        SelectedApi = SelectedApi == "card" ? "" : "card";
+    }
+
+    private async Task DrawCard()
+    {
+        Card = await ApiService.DrawCardAsync();
+    }
+}
