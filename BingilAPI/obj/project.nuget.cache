@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "6glszC/jUso=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\samar\\source\\repos\\Bingil-IPT\\BingilAPI\\BingilAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\samar\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.10\\microsoft.aspnetcore.app.internal.assets.10.0.10.nupkg.sha512",
+    "C:\\Users\\samar\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}
