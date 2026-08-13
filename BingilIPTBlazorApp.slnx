@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="BingilBlazorAppLifeCycle/BingilBlazorAppLifeCycle.csproj" />
+  <Project Path="Bingil_BlazorExam/Bingil_BlazorExam.csproj" Id="e82608ce-5bc8-4cdd-b06e-5ba3d1aab1f2" />
   <Project Path="BlazorApp/BlazorApp1.csproj" />
 </Solution>
