@@ -1,19 +1,47 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject Bingil_BlazorExam.Services.ApiServices ApiService
+@using Bingil_BlazorExam.Models
 
 <PageTitle>Home</PageTitle>
 
 <div class="head">
     <h1>Name: Sam Ariz G. Bingil</h1>
     <div class="body">
-        <lu
+        <ul>
             <li>Student ID: 24-1217</li>
             <li>Program: BSIT</li>
             <li>Year Level: 3rd Year</li>
             <li>Email Address: bingil.sa@southernchristiancollege.edu.ph</li>
             <li>Contact Number: 09776652741</li>
-        </lu>
+        </ul>
         <h1>About me</h1>
         <p>I am a dedicated student pursuing a Bachelor of Science in Information Technology at Southern Christian College. I am passionate about web development and enjoy creating interactive and user-friendly applications.</p>
     </div>
+    <div class="quote">
+        <button class="btn btn-primary" @onclick="GetQuote">Get Quote</button>
 
+        @if (Quote != null)
+        {
+            <p>"@Quote.quote"</p>
+            <p>- @Quote.author</p>
+        }
+    </div>
 </div>
+@code{
+
+    private string SelectedApi = "";
+    private Quote? Quote;
+
+
+    private void ShowQuote()
+    {
+        SelectedApi = SelectedApi == "quote" ? "" : "quote";
+    }
+
+    private async Task GetQuote()
+    {
+        var result = await ApiService.GetQuoteAsync();
+        Quote = result;
+    }
+}

@@ -6,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Register ApiServices as a typed HttpClient so its constructor receives an HttpClient
+builder.Services.AddHttpClient<Bingil_BlazorExam.Services.ApiServices>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
