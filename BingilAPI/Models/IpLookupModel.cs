@@ -1,4 +1,4 @@
-namespace BingilAPI.Models
+﻿namespace BingilAPI.Models
 {
     public class IpLookupResult
     {

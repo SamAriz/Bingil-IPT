@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BingilAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4bd7365bcd40d56dd1107b905ad1d1ab5789260")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+24c0f6776371f2eb262df55439d6f41a59e763ae")]
 [assembly: System.Reflection.AssemblyProductAttribute("BingilAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BingilAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

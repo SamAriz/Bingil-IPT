@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BingilBlazorAppLifeCycle")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9c8c93cbd70fa59f173c5da91e892ca74af0bf0f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+17177feb9b1a888463b1309d395a80facaf72472")]
 [assembly: System.Reflection.AssemblyProductAttribute("BingilBlazorAppLifeCycle")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BingilBlazorAppLifeCycle")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

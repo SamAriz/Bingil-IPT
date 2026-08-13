@@ -163,7 +163,6 @@
 
     private async Task DrawCard()
     {
-        var response = await ApiService.DrawCardAsync();
-        Card = response.cards.FirstOrDefault();
+        Card = await ApiService.DrawCardAsync();
     }
 }

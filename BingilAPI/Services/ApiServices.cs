@@ -1,4 +1,4 @@
-using BingilAPI.Models;
+﻿using BingilAPI.Models;
 
 namespace BingilAPI.Services
 {

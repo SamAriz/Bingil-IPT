@@ -1,4 +1,4 @@
-namespace BingilAPI.Models
+﻿namespace BingilAPI.Models
 {
     public class DrawCardResponse
     {
@@ -9,6 +9,8 @@ namespace BingilAPI.Models
 
     public class PlayingCard
     {
+        internal object cards;
+
         public string image { get; set; } = "";
         public string value { get; set; } = "";
         public string suit { get; set; } = "";
