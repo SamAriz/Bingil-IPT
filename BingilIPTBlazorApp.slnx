@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="BingilAPI/BingilAPI.csproj" Id="0f7ec23c-c29f-42cc-b224-92a33871c4ac" />
+  <Project Path="BingilAspNetCoreWebApi/BingilAspNetCoreWebApi.csproj" Id="28e24cba-d520-4477-ac54-85d8c029d001" />
   <Project Path="BingilBlazorAppLifeCycle/BingilBlazorAppLifeCycle.csproj" />
   <Project Path="Bingil_BlazorExam/Bingil_BlazorExam.csproj" Id="e82608ce-5bc8-4cdd-b06e-5ba3d1aab1f2" />
   <Project Path="BlazorApp/BlazorApp1.csproj" />

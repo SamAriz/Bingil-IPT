@@ -1,13 +1,19 @@
-﻿body {
+﻿.body {
     width: 1000px;
     border: 5px solid black;
     padding: 25px;
     margin: 10px;
 }
 
-quote {
-    width: 300px;
-    border: 15px solid green;
-    padding: 50px;
-    margin: 20px;
+.quote {
+    width: 1000px;
+    border: 5px solid black;
+    padding: 52px;
+    margin: 10px;
+}
+.head {
+    width: 1000px;
+    border: 5px solid black;
+    padding: 25px;
+    margin: 10px;
 }

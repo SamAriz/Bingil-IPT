@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Info API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        section {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+
+        input {
+            padding: 6px;
+            margin-right: 8px;
+            width: 200px;
+        }
+
+        button {
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Info API Tester</h1>
+
+    <section>
+        <h3>Full Name</h3>
+        <input type="text" id="fullNameInput" placeholder="Enter full name">
+        <button onclick="setFullName()">Set</button>
+        <button onclick="getFullName()">Get</button>
+        <div class="result" id="fullNameResult"></div>
+    </section>
+
+    <section>
+        <h3>ID No.</h3>
+        <input type="text" id="idNoInput" placeholder="Enter ID number">
+        <button onclick="setIdNo()">Set</button>
+        <button onclick="getIdNo()">Get</button>
+        <div class="result" id="idNoResult"></div>
+    </section>
+
+    <section>
+        <h3>Program</h3>
+        <input type="text" id="programInput" placeholder="Enter program">
+        <button onclick="setProgram()">Set</button>
+        <button onclick="getProgram()">Get</button>
+        <div class="result" id="programResult"></div>
+    </section>
+
+    <section>
+        <h3>Birthdate</h3>
+        <input type="date" id="birthDateInput">
+        <button onclick="setBirthDate()">Set</button>
+        <button onclick="getBirthDate()">Get</button>
+        <div class="result" id="birthDateResult"></div>
+    </section>
+
+    <section>
+        <h3>Age</h3>
+        <button onclick="getAge()">Get Age</button>
+        <div class="result" id="ageResult"></div>
+    </section>
+
+    <script>
+        const baseUrl = "/api/student";
+
+        async function callApi(url, method = "GET", body = null) {
+            try {
+                const options = { method, headers: { "Content-Type": "application/json" } };
+                if (body !== null) options.body = JSON.stringify(body);
+
+                const response = await fetch(url, options);
+                const text = await response.text();
+
+                if (!response.ok) {
+                    return `Error (${response.status}): ${text}`;
+                }
+                return text;
+            } catch (err) {
+                return `Request failed: ${err.message}`;
+            }
+        }
+
+        async function getFullName() {
+            document.getElementById("fullNameResult").innerText = await callApi(`${baseUrl}/fullname`);
+        }
+        async function setFullName() {
+            const val = document.getElementById("fullNameInput").value;
+            document.getElementById("fullNameResult").innerText = await callApi(`${baseUrl}/fullname`, "POST", val);
+        }
+
+        async function getIdNo() {
+            document.getElementById("idNoResult").innerText = await callApi(`${baseUrl}/idno`);
+        }
+        async function setIdNo() {
+            const val = document.getElementById("idNoInput").value;
+            document.getElementById("idNoResult").innerText = await callApi(`${baseUrl}/idno`, "POST", val);
+        }
+
+        async function getProgram() {
+            document.getElementById("programResult").innerText = await callApi(`${baseUrl}/program`);
+        }
+        async function setProgram() {
+            const val = document.getElementById("programInput").value;
+            document.getElementById("programResult").innerText = await callApi(`${baseUrl}/program`, "POST", val);
+        }
+
+        async function getBirthDate() {
+            document.getElementById("birthDateResult").innerText = await callApi(`${baseUrl}/birthdate`);
+        }
+        async function setBirthDate() {
+            const val = document.getElementById("birthDateInput").value;
+            document.getElementById("birthDateResult").innerText = await callApi(`${baseUrl}/birthdate`, "POST", val);
+        }
+
+        async function getAge() {
+            document.getElementById("ageResult").innerText = await callApi(`${baseUrl}/age`);
+        }
+    </script>
+</body>
+</html>

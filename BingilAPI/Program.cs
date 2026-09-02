@@ -6,8 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddHttpClient();
-builder.Services.AddScoped<BingilAPI.Services.ApiService>();
+// Register ApiService as a typed HttpClient so HttpClient is injected correctly
+builder.Services.AddHttpClient<BingilAPI.Services.ApiService>();
 
 var app = builder.Build();
 

@@ -114,20 +114,74 @@
             }
         </div>
 
+        @* ---------- 4. STUDENT INFO ---------- *@
+        <div class="menu-item">
+            <div class="icon-box">🎓</div>
+            <h3>Student Info</h3>
+            <p class="tagline">View and set student details</p>
+
+            <button class="add-to-cart-btn" @onclick="ShowStudent">
+                @(SelectedApi == "student" ? "Close" : "Open")
+            </button>
+
+            @if (SelectedApi == "student")
+            {
+                <div class="card-content pop-in">
+                    <input type="text" class="form-control" @bind="FullNameInput" placeholder="Full Name" />
+                    <button class="inner-btn" @onclick="SetFullName">Set Name</button>
+
+                    <input type="text" class="form-control" @bind="IdNoInput" placeholder="ID No" />
+                    <button class="inner-btn" @onclick="SetIdNo">Set ID</button>
+
+                    <input type="text" class="form-control" @bind="ProgramInput" placeholder="Program" />
+                    <button class="inner-btn" @onclick="SetProgram">Set Program</button>
+
+                    <input type="date" class="form-control" @bind="BirthDateInput" />
+                    <button class="inner-btn" @onclick="SetBirthDate">Set Birthdate</button>
+
+                    <button class="inner-btn" @onclick="LoadStudent">Refresh Info</button>
+
+                    @if (StudentErrorMessage != null)
+                    {
+                        <p>@StudentErrorMessage</p>
+                    }
+
+                    <div class="result-block">
+                        <p><strong>@StudentData.FullName</strong></p>
+                        <p>ID: @StudentData.IdNo</p>
+                        <p>Program: @StudentData.Program</p>
+                        <p>Birthdate: @StudentData.BirthDate</p>
+                        <p>Age: @(StudentData.Age?.ToString() ?? "N/A")</p>
+                    </div>
+                </div>
+            }
+        </div>
+
     </div>
 </div>
 
 @code {
     private string SelectedApi = "";
 
+    // ---------- Pokedex ----------
     private PokemonResult? Pokemon;
     private string PokemonQuery = "";
     private bool PokemonNotFound = false;
 
+    // ---------- IP Lookup ----------
     private IpLookupResult? IpResult;
     private string IpQuery = "";
 
+    // ---------- Deck of Cards ----------
     private PlayingCard? Card;
+
+    // ---------- Student Info ----------
+    private StudentInfo StudentData = new();
+    private string? StudentErrorMessage;
+    private string FullNameInput = "";
+    private string IdNoInput = "";
+    private string ProgramInput = "";
+    private DateTime BirthDateInput = DateTime.Today;
 
     private void ShowPokemon()
     {
@@ -164,5 +218,47 @@
     private async Task DrawCard()
     {
         Card = await ApiService.DrawCardAsync();
+    }
+
+    private void ShowStudent()
+    {
+        SelectedApi = SelectedApi == "student" ? "" : "student";
+    }
+
+    private async Task LoadStudent()
+    {
+        try
+        {
+            StudentErrorMessage = null;
+            StudentData = await ApiService.GetFullStudentInfoAsync();
+        }
+        catch (Exception ex)
+        {
+            StudentErrorMessage = $"Error loading data: {ex.Message}";
+        }
+    }
+
+    private async Task SetFullName()
+    {
+        await ApiService.SetStudentFullNameAsync(FullNameInput);
+        await LoadStudent();
+    }
+
+    private async Task SetIdNo()
+    {
+        await ApiService.SetStudentIdNoAsync(IdNoInput);
+        await LoadStudent();
+    }
+
+    private async Task SetProgram()
+    {
+        await ApiService.SetStudentProgramAsync(ProgramInput);
+        await LoadStudent();
+    }
+
+    private async Task SetBirthDate()
+    {
+        await ApiService.SetStudentBirthDateAsync(BirthDateInput);
+        await LoadStudent();
     }
 }

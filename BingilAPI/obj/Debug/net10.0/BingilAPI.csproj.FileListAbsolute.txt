@@ -84,3 +84,6 @@ C:\Users\samar\source\repos\Bingil-IPT\BingilAPI\obj\Debug\net10.0\refint\Bingil
 C:\Users\samar\source\repos\Bingil-IPT\BingilAPI\obj\Debug\net10.0\BingilAPI.pdb
 C:\Users\samar\source\repos\Bingil-IPT\BingilAPI\obj\Debug\net10.0\BingilAPI.genruntimeconfig.cache
 C:\Users\samar\source\repos\Bingil-IPT\BingilAPI\obj\Debug\net10.0\ref\BingilAPI.dll
+C:\Users\samar\source\repos\Bingil-IPT\BingilAPI\obj\Debug\net10.0\BingilAPI.csproj.AssemblyReference.cache
+C:\Users\samar\source\repos\Bingil-IPT\BingilAPI\bin\Debug\net10.0\Newtonsoft.Json.dll
+C:\Users\samar\source\repos\Bingil-IPT\BingilAPI\obj\Debug\net10.0\BingilAPI.csproj.Up2Date

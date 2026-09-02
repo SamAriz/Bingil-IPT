@@ -1,0 +1,110 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject BlazorApp2.Services.ApiService ApiService
+@using BlazorApp2.Models
+
+<PageTitle>Student Info</PageTitle>
+
+<h1>Student Info</h1>
+
+@if (StudentErrorMessage != null)
+{
+    <p style="color:red;">@StudentErrorMessage</p>
+}
+
+<table style="border-collapse: collapse; margin-bottom: 20px;">
+    <tbody>
+        <tr>
+            <td style="padding:6px; font-weight:bold;">Full Name</td>
+            <td style="padding:6px;">@StudentData.FullName</td>
+        </tr>
+        <tr>
+            <td style="padding:6px; font-weight:bold;">ID No.</td>
+            <td style="padding:6px;">@StudentData.IdNo</td>
+        </tr>
+        <tr>
+            <td style="padding:6px; font-weight:bold;">Program</td>
+            <td style="padding:6px;">@StudentData.Program</td>
+        </tr>
+        <tr>
+            <td style="padding:6px; font-weight:bold;">Birthdate</td>
+            <td style="padding:6px;">@StudentData.BirthDate</td>
+        </tr>
+        <tr>
+            <td style="padding:6px; font-weight:bold;">Age</td>
+            <td style="padding:6px;">@(StudentData.Age?.ToString() ?? "N/A")</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Set / Update Info</h3>
+
+<input type="text" @bind="FullNameInput" placeholder="Full Name" />
+<button @onclick="SetFullName">Set Name</button>
+<br /><br />
+
+<input type="text" @bind="IdNoInput" placeholder="ID No" />
+<button @onclick="SetIdNo">Set ID</button>
+<br /><br />
+
+<input type="text" @bind="ProgramInput" placeholder="Program" />
+<button @onclick="SetProgram">Set Program</button>
+<br /><br />
+
+<input type="date" @bind="BirthDateInput" />
+<button @onclick="SetBirthDate">Set Birthdate</button>
+<br /><br />
+
+<button @onclick="LoadStudent">Refresh Info</button>
+
+@code {
+    private StudentInfo StudentData = new();
+    private string? StudentErrorMessage;
+
+    private string FullNameInput = "";
+    private string IdNoInput = "";
+    private string ProgramInput = "";
+    private DateTime BirthDateInput = DateTime.Today;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStudent();
+    }
+
+    private async Task LoadStudent()
+    {
+        try
+        {
+            StudentErrorMessage = null;
+            StudentData = await ApiService.GetFullStudentInfoAsync();
+        }
+        catch (Exception ex)
+        {
+            StudentErrorMessage = $"Error loading data: {ex.Message}";
+        }
+    }
+
+    private async Task SetFullName()
+    {
+        await ApiService.SetStudentFullNameAsync(FullNameInput);
+        await LoadStudent();
+    }
+
+    private async Task SetIdNo()
+    {
+        await ApiService.SetStudentIdNoAsync(IdNoInput);
+        await LoadStudent();
+    }
+
+    private async Task SetProgram()
+    {
+        await ApiService.SetStudentProgramAsync(ProgramInput);
+        await LoadStudent();
+    }
+
+    private async Task SetBirthDate()
+    {
+        await ApiService.SetStudentBirthDateAsync(BirthDateInput);
+        await LoadStudent();
+    }
+}
