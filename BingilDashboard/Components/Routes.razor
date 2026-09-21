@@ -1,0 +1,10 @@
+﻿@* Router component: maps incoming URLs to Razor components in the app assembly.
+   - NotFoundPage specifies the component to render for unknown routes.
+   - RouteView renders the matched component inside the MainLayout.
+   - FocusOnNavigate improves accessibility by focusing the page heading after navigation. *@
+<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+</Router>

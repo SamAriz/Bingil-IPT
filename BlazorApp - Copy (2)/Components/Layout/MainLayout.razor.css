@@ -1,0 +1,89 @@
+.page-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #1f2337;
+}
+
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: #0f172a;
+    color: white;
+    border-bottom: 1px solid #334155;
+}
+
+.brand-mark {
+    font-weight: 700;
+    font-size: 1.3rem;
+    background: white;
+    color: #0f172a;
+    border-radius: 999px;
+    padding: 6px 12px;
+}
+
+.nav-title {
+    font-weight: 600;
+}
+
+.content-shell {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    background: #f8fafc;
+}
+
+.side-panel {
+    width: 300px;
+    background: #16213e;
+    border-left: 1px solid #2a2f4f;
+    padding: 20px;
+    overflow-y: auto;
+    color: #e2e8f0;
+}
+
+.side-panel h4,
+.side-panel h3 {
+    color: #a5b4fc;
+}
+
+.hobby-item {
+    margin-bottom: 20px;
+}
+
+.media-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.media-grid img,
+.side-panel video,
+.side-panel audio {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.media-grid img {
+    height: 90px;
+    object-fit: cover;
+}
+
+@media (max-width: 900px) {
+    .content-shell {
+        flex-direction: column;
+    }
+
+    .side-panel {
+        width: 100%;
+        border-left: 0;
+        border-top: 1px solid #2a2f4f;
+    }
+}

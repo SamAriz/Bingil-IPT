@@ -1,0 +1,228 @@
+﻿@page "/"
+@using BingilDashboard.Data
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+@* Home page for the sample profile app.
+   - Buttons request specific fields or the full profile from the server.
+   - The page lazy-loads the profile JSON from /api/profile and renders
+     only the sections requested by the user (showMode).
+*@
+<PageTitle>Home</PageTitle>
+
+<div class="home-container">
+    <h1>Welcome</h1>
+    <p class="subtitle">Click a button to load my profile information</p>
+
+    <!-- Action buttons: choose what to display -->
+    <div class="button-group">
+        <button class="btn btn-primary" @onclick="LoadFullProfile" disabled="@isLoading">
+            @(isLoading ? "Loading..." : "Show Full Profile")
+        </button>
+
+        <!-- Specific-field buttons: each sets showMode and triggers a profile load -->
+        <button class="btn btn-outline-secondary" @onclick="ShowNameOnly" disabled="@isLoading">
+            Show Name
+        </button>
+
+        <button class="btn btn-outline-secondary" @onclick="ShowCourseOnly" disabled="@isLoading">
+            Show Course
+        </button>
+
+        <button class="btn btn-outline-secondary" @onclick="ShowSchoolsOnly" disabled="@isLoading">
+            Show Schools
+        </button>
+
+        <button class="btn btn-outline-secondary" @onclick="ShowSkillsOnly" disabled="@isLoading">
+            Show Skills
+        </button>
+
+        <button class="btn btn-outline-secondary" @onclick="ShowIntroOnly" disabled="@isLoading">
+            Show Intro
+        </button>
+
+        <button class="btn btn-outline-danger" @onclick="Clear" disabled="@(profile is null)">
+            Clear
+        </button>
+    </div>
+
+    @if (isLoading)
+    {
+        <!-- Simple loading indicator while the HTTP call is in progress -->
+        <div class="loading">Loading profile data...</div>
+    }
+    else if (profile is not null)
+    {
+        <div class="profile-card">
+            <!-- Render different parts of the profile depending on showMode -->
+
+            @if (showMode == "name")
+            {
+                <!-- Name-only view -->
+                <h2>@profile.Name</h2>
+            }
+
+            @if (showMode == "course")
+            {
+                <!-- Course-only view -->
+                <p class="course">@profile.Course</p>
+            }
+
+            @if (showMode == "full")
+            {
+                <!-- Full profile view: basic info, lists and intro -->
+                <h2>@profile.Name</h2>
+                <p class="course">@profile.Course</p>
+
+                <div class="info-grid">
+                    <div><span class="label">Age</span> @profile.Age</div>
+                    <div><span class="label">ID</span> @profile.Id</div>
+                    <div><span class="label">Birthday</span> @profile.Birthday.ToString("MMMM d, yyyy")</div>
+                </div>
+
+                <div class="section">
+                    <h3>Schools I've been to</h3>
+                    <ul>
+                        @foreach (var school in profile.Schools)
+                        {
+                            <li>@school</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>Skills</h3>
+                    <div class="skills">
+                        @foreach (var skill in profile.Skills)
+                        {
+                            <span class="skill-badge">@skill</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>About Me</h3>
+                    <p class="intro">@profile.Intro</p>
+                </div>
+            }
+
+            @if (showMode == "schools")
+            {
+                <!-- Schools-only view -->
+                <div class="section">
+                    <h3>Schools I've been to</h3>
+                    <ul>
+                        @foreach (var school in profile.Schools)
+                        {
+                            <li>@school</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @if (showMode == "skills")
+            {
+                <!-- Skills-only view -->
+                <div class="section">
+                    <h3>Skills</h3>
+                    <div class="skills">
+                        @foreach (var skill in profile.Skills)
+                        {
+                            <span class="skill-badge">@skill</span>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (showMode == "intro")
+            {
+                <!-- Intro-only view -->
+                <div class="section">
+                    <h3>About Me</h3>
+                    <p class="intro">@profile.Intro</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    // Local component state
+    private Profile? profile; // cached profile data after the first load
+    private bool isLoading; // true while the HTTP request is in progress
+    private string showMode = "full"; // controls which section(s) are rendered
+
+    // Handlers for the buttons. Each sets the desired showMode and ensures the
+    // profile is loaded by calling LoadProfile().
+    private async Task LoadFullProfile()
+    {
+        showMode = "full";
+        await LoadProfile();
+    }
+
+    private async Task ShowBasicInfo()
+    {
+        showMode = "basic"; // not used currently but kept for compatibility
+        await LoadProfile();
+    }
+
+    private async Task ShowSchoolsAndSkills()
+    {
+        showMode = "schools";
+        await LoadProfile();
+    }
+
+    private async Task ShowNameOnly()
+    {
+        showMode = "name";
+        await LoadProfile();
+    }
+
+    private async Task ShowCourseOnly()
+    {
+        showMode = "course";
+        await LoadProfile();
+    }
+
+    private async Task ShowSchoolsOnly()
+    {
+        showMode = "schools";
+        await LoadProfile();
+    }
+
+    private async Task ShowSkillsOnly()
+    {
+        showMode = "skills";
+        await LoadProfile();
+    }
+
+    private async Task ShowIntroOnly()
+    {
+        showMode = "intro";
+        await LoadProfile();
+    }
+
+    // Lazy-load the profile from the server. If profile is already populated,
+    // do nothing to avoid unnecessary HTTP calls.
+    private async Task LoadProfile()
+    {
+        if (profile is not null) return;
+
+        isLoading = true;
+        try
+        {
+            profile = await Http.GetFromJsonAsync<Profile>("/api/profile");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    // Reset UI state
+    private void Clear()
+    {
+        profile = null;
+        showMode = "full";
+    }
+}

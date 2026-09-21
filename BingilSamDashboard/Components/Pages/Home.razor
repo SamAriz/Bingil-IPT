@@ -1,0 +1,103 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+@inject System.Net.Http.HttpClient Http
+@inject NavigationManager Navigation
+
+<h1>Profile API Demo</h1>
+
+<div class="mb-3">
+    <button class="btn btn-primary me-2" @onclick="LoadProfile">Load Profile</button>
+    <button class="btn btn-outline-primary me-2" @onclick="LoadName">Load Name</button>
+    <button class="btn btn-outline-secondary me-2" @onclick="LoadSkills">Load Skills</button>
+    <button class="btn btn-success" @onclick="UpdateName">Set Name (demo)</button>
+</div>
+
+@if (Profile is not null)
+{
+    <div class="card p-3 mb-3">
+        <h4>@Profile.FullName</h4>
+        <p>@Profile.Introduction</p>
+        <p><strong>Skills:</strong> @string.Join(", ", Profile.Skills)</p>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(LastResponse))
+{
+    <div class="alert alert-info">@LastResponse</div>
+}
+
+@code {
+    private BingilSamDashboard.Models.ProfileInfo? Profile;
+    private string LastResponse = string.Empty;
+
+    private string ApiBase => Navigation.BaseUri.TrimEnd('/');
+
+    private string MakeApi(string path) => ApiBase + (path.StartsWith('/') ? path : "/" + path);
+
+    private async Task LoadProfile()
+    {
+        try
+        {
+            var url = MakeApi("/api/Profile");
+            Profile = await Http.GetFromJsonAsync<BingilSamDashboard.Models.ProfileInfo>(url);
+            LastResponse = Profile is not null ? "Profile loaded." : "Profile endpoint returned null.";
+        }
+        catch (Exception ex)
+        {
+            LastResponse = "Error: " + ex.Message;
+        }
+    }
+
+    private async Task LoadName()
+    {
+        try
+        {
+            var url = MakeApi("/api/Profile/name");
+            var name = await Http.GetStringAsync(url);
+            LastResponse = "Name: " + name;
+        }
+        catch (Exception ex)
+        {
+            LastResponse = "Error: " + ex.Message;
+        }
+    }
+
+    private async Task LoadSkills()
+    {
+        try
+        {
+            var url = MakeApi("/api/Profile/skills");
+            var skills = await Http.GetFromJsonAsync<List<string>>(url);
+            LastResponse = skills is null ? "No skills" : "Skills: " + string.Join(", ", skills);
+        }
+        catch (Exception ex)
+        {
+            LastResponse = "Error: " + ex.Message;
+        }
+    }
+
+    private async Task UpdateName()
+    {
+        try
+        {
+            var newName = "Sam Ariz G. Bingil (Updated)";
+            var url = MakeApi("/api/Profile/name");
+            var resp = await Http.PostAsJsonAsync(url, newName);
+            if (resp.IsSuccessStatusCode)
+            {
+                LastResponse = "Name updated to: " + newName;
+                await LoadProfile();
+            }
+            else
+            {
+                LastResponse = $"Failed to update name: {resp.StatusCode} - {await resp.Content.ReadAsStringAsync()}";
+            }
+        }
+        catch (Exception ex)
+        {
+            LastResponse = "Error: " + ex.Message;
+        }
+    }
+}

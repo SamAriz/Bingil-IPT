@@ -1,0 +1,298 @@
+@page "/"
+@using BingilAPI.Models
+@inject BingilAPI.Services.ApiService ApiService
+
+<PageTitle>Profile</PageTitle>
+
+<div class="duo-root">
+    <header class="duo-header">
+        <div class="duo-brand">
+            <div class="duo-owl">🦉</div>
+            <div class="duo-title">Sam's Profile</div>
+        </div>
+    </header>
+
+    <main class="duo-main">
+        <aside class="duo-aside">
+            <div class="avatar-card">
+                <img src="/img/profile-image.jpg" alt="profile" />
+                <h1>Sam Ariz G. Bingil</h1>
+                <p class="role">IT Student</p>
+            </div>
+
+            <div class="card">
+                <h3>CONTACT</h3>
+                <p><span class="icon">📞</span> +63 9776652741</p>
+                <p><span class="icon">✉️</span> sam@gmail.com</p>
+                <p><span class="icon">📍</span> Pob. 5, Midsayap, Cotabato</p>
+            </div>
+
+            <div class="card">
+                <h3>SKILLS</h3>
+                <ul>
+                    <li>I can make it</li>
+                    <li>Web Development</li>
+                    <li>Database Management</li>
+                    <li>SQL Database Management</li>
+                    <li>Linux/Unix Command line</li>
+                    <li>Python</li>
+                    <li>C#</li>
+                    <li>JAVA</li>
+                    <li>HTML</li>
+                    <li>CSS</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>LANGUAGES</h3>
+                <ul>
+                    <li>English - Proficient</li>
+                    <li>Tagalog - Proficient</li>
+                </ul>
+            </div>
+
+            <div class="card small">
+                <h3>HOBBIES</h3>
+                <ul>
+                    <li>Eating</li>
+                    <li>Online Games</li>
+                    <li>Music</li>
+                    <li>Watching Movies</li>
+                    <li>Watching Anime</li>
+                    <li>Sleeping</li>
+                </ul>
+            </div>
+
+            <div class="card small">
+                <h3>WEAKNESS</h3>
+                <ul>
+                    <li>Selos</li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="duo-content">
+            <div class="card">
+                <h2>PROFILE</h2>
+                <p>I am an IT student with experience in a variety of programming languages and a track record of delivering high-quality code...</p>
+            </div>
+
+            <div class="exp-row">
+                <div class="exp-col">
+                    <div class="card">
+                        <h2>EXPERIENCES</h2>
+                        <div class="experience-item">
+                            <ul>
+                                <li>HackforGov</li>
+                                <li>PSITS Java Coding</li>
+                                <li>CodeChum National Programming Challenge Season 2</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exp-col">
+                    <div class="card">
+                        <h2>DESCRIPTION</h2>
+                        <ul>
+                            <li>Developed school projects using Java, Python, and C#</li>
+                            <li>Led functional teams...somehow</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card actions">
+                <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank" class="duo-btn danger"><span class="play">▶</span> Play ME!</a>
+            </div>
+
+            <!-- APIs embedded on homepage -->
+            <section id="apis" class="card api-panel" style="margin-top:20px;">
+                <h2 style="margin-bottom:12px;color:var(--duo-accent);">APIs</h2>
+                <div class="api-grid">
+                    <div class="api-section">
+                        <h3>Pokemon Lookup</h3>
+                        <div class="row controls">
+                            <input class="input" placeholder="Name or ID (e.g. pikachu or 25)" @bind="PokemonInput" />
+                            <button class="btn primary" @onclick="LookupPokemon" disabled="@PokemonLoading">Lookup</button>
+                        </div>
+                        @if (PokemonLoading)
+                        {
+                            <p class="muted">Searching...</p>
+                        }
+                        else if (!string.IsNullOrEmpty(PokemonError))
+                        {
+                            <p class="error">@PokemonError</p>
+                        }
+                        else if (PokemonResult != null)
+                        {
+                            <div class="result">
+                                <img src="@PokemonResult.sprites.front_default" alt="sprite" />
+                                <div>
+                                    <p><strong>@PokemonResult.name</strong></p>
+                                    <p class="muted">Types: @string.Join(", ", PokemonResult.types.Select(t => t.type.name))</p>
+                                    <p class="muted">Height: @PokemonResult.height • Weight: @PokemonResult.weight</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="api-section">
+                        <h3>IP Lookup</h3>
+                        <div class="row controls">
+                            <input class="input" placeholder="IP (leave blank for caller)" @bind="IpInput" />
+                            <button class="btn primary" @onclick="LookupIp" disabled="@IpLoading">Lookup</button>
+                        </div>
+                        @if (IpLoading)
+                        {
+                            <p class="muted">Looking up...</p>
+                        }
+                        else if (!string.IsNullOrEmpty(IpError))
+                        {
+                            <p class="error">@IpError</p>
+                        }
+                        else if (IpResult != null)
+                        {
+                            <ul>
+                                <li><strong>IP:</strong> @IpResult.query</li>
+                                <li><strong>Location:</strong> @IpResult.city, @IpResult.regionName, @IpResult.country (@IpResult.zip)</li>
+                                <li><strong>ISP:</strong> @IpResult.isp</li>
+                            </ul>
+                        }
+                    </div>
+
+                    <div class="api-section">
+                        <h3>Draw a Card</h3>
+                        <div class="row controls">
+                            <button class="btn primary" @onclick="DrawCard" disabled="@CardLoading">Draw</button>
+                        </div>
+                        @if (CardLoading)
+                        {
+                            <p class="muted">Drawing...</p>
+                        }
+                        else if (!string.IsNullOrEmpty(CardError))
+                        {
+                            <p class="error">@CardError</p>
+                        }
+                        else if (LastCard != null)
+                        {
+                            <div class="result">
+                                <img src="@LastCard.image" alt="card" />
+                                <div>
+                                    <p><strong>@LastCard.value of @LastCard.suit</strong></p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+
+        </section>
+    </main>
+
+    <footer class="duo-footer">Profile powered by Blazor</footer>
+</div>
+
+@code {
+    // Pokemon
+    private string PokemonInput { get; set; } = string.Empty;
+    private bool PokemonLoading { get; set; }
+    private string? PokemonError { get; set; }
+    private PokemonResult? PokemonResult { get; set; }
+
+    // IP Lookup
+    private string IpInput { get; set; } = string.Empty;
+    private bool IpLoading { get; set; }
+    private string? IpError { get; set; }
+    private IpLookupResult? IpResult { get; set; }
+
+    // Draw card
+    private bool CardLoading { get; set; }
+    private string? CardError { get; set; }
+    private PlayingCard? LastCard { get; set; }
+
+    private async Task LookupPokemon()
+    {
+        PokemonLoading = true;
+        PokemonError = null;
+        PokemonResult = null;
+            try
+        {
+            if (string.IsNullOrWhiteSpace(PokemonInput))
+            {
+                PokemonError = "Enter a name or id.";
+                return;
+            }
+            var res = await ApiService.GetPokemonAsync(PokemonInput.Trim());
+                if (res == null)
+                {
+                    PokemonError = ApiService.LastError ?? "Pokemon not found.";
+                }
+                else
+                {
+                    PokemonResult = res;
+                }
+        }
+        catch (Exception ex)
+        {
+            PokemonError = ex.Message;
+        }
+        finally
+        {
+            PokemonLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task LookupIp()
+    {
+        IpLoading = true;
+        IpError = null;
+        IpResult = null;
+            try
+        {
+            var ip = IpInput ?? string.Empty;
+            var res = await ApiService.GetIpLookupAsync(ip);
+                if (res == null)
+                {
+                    IpError = ApiService.LastError ?? "No result.";
+                }
+                else
+                {
+                    IpResult = res;
+                }
+        }
+        catch (Exception ex)
+        {
+            IpError = ex.Message;
+        }
+        finally
+        {
+            IpLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task DrawCard()
+    {
+        CardLoading = true;
+        CardError = null;
+        LastCard = null;
+            try
+        {
+            var c = await ApiService.DrawCardAsync();
+                if (c == null) CardError = ApiService.LastError ?? "No card returned.";
+                else LastCard = c;
+        }
+        catch (Exception ex)
+        {
+            CardError = ex.Message;
+        }
+        finally
+        {
+            CardLoading = false;
+            StateHasChanged();
+        }
+    }
+}
