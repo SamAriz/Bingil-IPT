@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+using BingilMobileApp.Services;
+using Microsoft.Extensions.Logging;
 
 namespace BingilMobileApp
 {
@@ -15,6 +16,16 @@ namespace BingilMobileApp
                 });
 
             builder.Services.AddMauiBlazorWebView();
+
+            // One shared HttpClient for the external APIs (Pokemon, IP lookup, Cards)
+            builder.Services.AddSingleton(_ =>
+            {
+                var http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("BingilMobileApp/1.0");
+                return http;
+            });
+            builder.Services.AddScoped<ApiService>();
+            builder.Services.AddScoped<ProfileApiClient>();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();

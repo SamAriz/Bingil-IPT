@@ -1,41 +1,123 @@
+:root {
+    --duo-bg: #0b1220;
+    --duo-card: #071129;
+    --duo-text: #e6eef8;
+    --duo-muted: #9aa7b8;
+    --duo-accent: #6d28d9;
+
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: var(--duo-bg);
+    color: var(--duo-text);
 }
 
-a, .btn-link {
-    color: #006bb7;
+button, input, select, textarea {
+    font: inherit;
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+button {
+    cursor: pointer;
+    pointer-events: auto;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+button:focus-visible {
+    outline: 3px solid rgba(59, 130, 246, 0.75);
+    outline-offset: 3px;
 }
 
-.content {
-    padding-top: 1.1rem;
+/* Profile Page - Resume Style */
+.profile-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8f9fa;
 }
 
-h1:focus {
-    outline: none;
+.sidebar {
+    width: 320px;
+    background-color: #0a2540;
+    color: white;
+    padding: 2rem 1.5rem;
+    flex-shrink: 0;
 }
 
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+.profile-photo img {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 5px solid #1e3a8a;
+    margin-bottom: 1rem;
 }
 
-.invalid {
-    outline: 1px solid #e50000;
+.sidebar h1 {
+    margin: 0.5rem 0;
+    font-size: 1.8rem;
 }
 
-.validation-message {
-    color: #e50000;
+.title {
+    color: #60a5fa;
+    margin-bottom: 2rem;
 }
 
+.main-content {
+    flex: 1;
+    padding: 2.5rem;
+    background-color: white;
+}
+
+.section h3 {
+    color: #60a5fa;
+    border-bottom: 2px solid #1e3a8a;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
+.experience-item {
+    margin-bottom: 2rem;
+}
+
+.date {
+    float: right;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+.profile-photo img {
+    width: 200px;           /* Change this number */
+    height: 200px;
+    border-radius: 50%;
+    border: 6px solid #1e3a8a;
+    object-fit: cover;      /* Keeps the picture well-cropped */
+    margin-bottom: 1.5rem;
+}
+/* Navbar Color */
+.top-row {
+    background-color: #0a2540 !important;   /* Deep Navy */
+    color: white !important;
+}
+
+.top-row a {
+    color: white !important;
+}
+
+.top-row a:hover {
+    color: #60a5fa !important;
+}
+.profile-container {
+    background-color: #1e2937;
+}
+
+.main-content {
+    background-color: #334155;
+    color: white;
+}
+
+/* ---- MAUI Blazor Hybrid template rules (error banner, safe area) ---- */
 #blazor-error-ui {
     color-scheme: light only;
     background: lightyellow;
