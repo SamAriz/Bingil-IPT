@@ -33,10 +33,11 @@
 /* API controls and button improvements */
 .api-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(2,minmax(0,1fr));
     gap:16px;
+    align-items:start;
 }
-.api-section{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:14px; border-radius:10px; min-height:120px}
+.api-section{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:14px; border-radius:10px; min-height:120px; min-width:0; overflow-wrap:anywhere}
 .api-section h3{margin:0 0 8px 0}
 .controls{display:flex;gap:8px;align-items:center}
 .input{flex:1;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:var(--duo-text)}

@@ -1,7 +1,9 @@
 @page "/"
 @rendermode InteractiveServer
 @using BingilAPI.Models
+@using BlazorApp1.Models
 @inject BingilAPI.Services.ApiService ApiService
+@inject BlazorApp1.Services.ProfileApiClient ProfileApi
 
 <PageTitle>Profile</PageTitle>
 
@@ -15,61 +17,75 @@
 
     <main class="duo-main">
         <aside class="duo-aside">
-            <div class="avatar-card">
-                <img src="/img/profile-image.jpg" alt="profile" />
-                <h1>Sam Ariz G. Bingil</h1>
-                <p class="role">IT Student</p>
-            </div>
+            @if (Info == null)
+            {
+                <div class="card">
+                    <h3>PROFILE INFO</h3>
+                    @if (ProfileError != null)
+                    {
+                        <p class="error">@ProfileError</p>
+                    }
+                    else
+                    {
+                        <p class="muted">Loading...</p>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="avatar-card">
+                    <img src="/img/profile-image.jpg" alt="profile" />
+                    <h1>@Info.Name</h1>
+                    <p class="role">@Info.Role</p>
+                </div>
 
-            <div class="card">
-                <h3>CONTACT</h3>
-                <p><span class="icon">📞</span> +63 9776652741</p>
-                <p><span class="icon">✉️</span> sam@gmail.com</p>
-                <p><span class="icon">📍</span> Pob. 5, Midsayap, Cotabato</p>
-            </div>
+                <div class="card">
+                    <h3>CONTACT</h3>
+                    <p><span class="icon">📞</span> @Info.Contact.Phone</p>
+                    <p><span class="icon">✉️</span> @Info.Contact.Email</p>
+                    <p><span class="icon">📍</span> @Info.Contact.Address</p>
+                </div>
 
-            <div class="card">
-                <h3>SKILLS</h3>
-                <ul>
-                    <li>I can make it</li>
-                    <li>Web Development</li>
-                    <li>Database Management</li>
-                    <li>SQL Database Management</li>
-                    <li>Linux/Unix Command line</li>
-                    <li>Python</li>
-                    <li>C#</li>
-                    <li>JAVA</li>
-                    <li>HTML</li>
-                    <li>CSS</li>
-                </ul>
-            </div>
+                <div class="card">
+                    <h3>SKILLS</h3>
+                    <ul>
+                        @foreach (var skill in Info.Skills)
+                        {
+                            <li>@skill</li>
+                        }
+                    </ul>
+                </div>
 
-            <div class="card">
-                <h3>LANGUAGES</h3>
-                <ul>
-                    <li>English - Proficient</li>
-                    <li>Tagalog - Proficient</li>
-                </ul>
-            </div>
+                <div class="card">
+                    <h3>LANGUAGES</h3>
+                    <ul>
+                        @foreach (var language in Info.Languages)
+                        {
+                            <li>@language</li>
+                        }
+                    </ul>
+                </div>
 
-            <div class="card small">
-                <h3>HOBBIES</h3>
-                <ul>
-                    <li>Eating</li>
-                    <li>Online Games</li>
-                    <li>Music</li>
-                    <li>Watching Movies</li>
-                    <li>Watching Anime</li>
-                    <li>Sleeping</li>
-                </ul>
-            </div>
+                <div class="card small">
+                    <h3>HOBBIES</h3>
+                    <ul>
+                        @foreach (var hobby in Info.Hobbies)
+                        {
+                            <li>@hobby</li>
+                        }
+                    </ul>
+                </div>
 
-            <div class="card small">
-                <h3>WEAKNESS</h3>
-                <ul>
-                    <li>Selos</li>
-                </ul>
-            </div>
+                <div class="card small">
+                    <h3>WEAKNESS</h3>
+                    <ul>
+                        @foreach (var weakness in Info.Weaknesses)
+                        {
+                            <li>@weakness</li>
+                        }
+                    </ul>
+                </div>
+            }
         </aside>
 
         <section class="duo-content">
@@ -84,9 +100,10 @@
                         <h2>EXPERIENCES</h2>
                         <div class="experience-item">
                             <ul>
-                                <li>HackforGov</li>
-                                <li>PSITS Java Coding</li>
-                                <li>CodeChum National Programming Challenge Season 2</li>
+                                @foreach (var item in Info?.Experiences ?? new List<string>())
+                                {
+                                    <li>@item</li>
+                                }
                             </ul>
                         </div>
                     </div>
@@ -96,8 +113,10 @@
                     <div class="card">
                         <h2>DESCRIPTION</h2>
                         <ul>
-                            <li>Developed school projects using Java, Python, and C#</li>
-                            <li>Led functional teams...somehow</li>
+                            @foreach (var item in Info?.Descriptions ?? new List<string>())
+                            {
+                                <li>@item</li>
+                            }
                         </ul>
                     </div>
                 </div>
@@ -112,6 +131,31 @@
             <section id="apis" class="card api-panel" style="margin-top:20px;">
                 <h2 style="margin-bottom:12px;color:var(--duo-accent);">APIs</h2>
                 <div class="api-grid">
+                    <div class="api-section">
+                        <h3>My Details</h3>
+                        <div class="row controls">
+                            <button class="btn primary" @onclick="LoadDetails" disabled="@DetailsLoading">Load</button>
+                        </div>
+                        @if (DetailsLoading)
+                        {
+                            <p class="muted">Loading...</p>
+                        }
+                        else if (!string.IsNullOrEmpty(DetailsError))
+                        {
+                            <p class="error">@DetailsError</p>
+                        }
+                        else if (DetailsResult != null)
+                        {
+                            <ul>
+                                <li><strong>Birthday:</strong> @Show(DetailsResult.Birthday)</li>
+                                <li><strong>Age:</strong> @(DetailsResult.Age?.ToString() ?? "Not set")</li>
+                                <li><strong>ID:</strong> @Show(DetailsResult.StudentId)</li>
+                                <li><strong>School:</strong> @Show(DetailsResult.School)</li>
+                                <li><strong>Course:</strong> @Show(DetailsResult.Course)</li>
+                            </ul>
+                        }
+                    </div>
+
                     <div class="api-section">
                         <h3>Pokemon Lookup</h3>
                         <div class="row controls">
@@ -206,6 +250,27 @@
 </div>
 
 @code {
+    // Profile info loaded from our own /api/profile endpoint
+    private ProfileInfo? Info { get; set; }
+    private string? ProfileError { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Info = await ProfileApi.GetProfileAsync();
+        }
+        catch (Exception ex)
+        {
+            ProfileError = $"Could not load profile info: {ex.Message}";
+        }
+    }
+
+    // My Details (our own /api/details)
+    private bool DetailsLoading { get; set; }
+    private string? DetailsError { get; set; }
+    private DetailsInfo? DetailsResult { get; set; }
+
     // Pokemon
     private string PokemonInput { get; set; } = string.Empty;
     private bool PokemonLoading { get; set; }
@@ -222,6 +287,31 @@
     private bool CardLoading { get; set; }
     private string? CardError { get; set; }
     private PlayingCard? LastCard { get; set; }
+
+    private static string Show(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? "Not set" : value;
+
+    private async Task LoadDetails()
+    {
+        if (DetailsLoading) return;
+        DetailsLoading = true;
+        DetailsError = null;
+        DetailsResult = null;
+        try
+        {
+            DetailsResult = await ProfileApi.GetDetailsAsync();
+            if (DetailsResult == null) DetailsError = "No details returned.";
+        }
+        catch (Exception ex)
+        {
+            DetailsError = ex.Message;
+        }
+        finally
+        {
+            DetailsLoading = false;
+            StateHasChanged();
+        }
+    }
 
     private async Task OnPokemonKeyDown(KeyboardEventArgs e)
     {
