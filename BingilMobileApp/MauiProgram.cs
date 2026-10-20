@@ -25,7 +25,7 @@ namespace BingilMobileApp
                 return http;
             });
             builder.Services.AddScoped<ApiService>();
-            builder.Services.AddScoped<ProfileApiClient>();
+            builder.Services.AddSingleton<StudentInfoApi>();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();
